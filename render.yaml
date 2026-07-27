@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: carebridge-mcp
+    runtime: docker
+    plan: free
+    region: frankfurt
+    branch: main
+    # Auto-detects Dockerfile at repo root. We override the start command
+    # to run on HTTP transport (stdio only works for local MCP clients).
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    envVars:
+      - key: NODE_VERSION
+        value: 22.14.0
+      - key: MCP_TRANSPORT
+        value: http
+      - key: MCP_HTTP_HOST
+        value: 0.0.0.0
+      - key: MCP_HTTP_PORT
+        value: "3100"
+      - key: CAREBRIDGE_BASE_URL
+        value: https://carebridge-tfui.onrender.com
+      - key: CAREBRIDGE_HTTP_TIMEOUT_MS
+        value: "15000"
+      - key: NODE_ENV
+        value: production
+      - key: NEXT_TELEMETRY_DISABLED
+        value: "1"
+    healthCheckPath: /health
+    autoDeployTrigger: commit

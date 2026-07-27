@@ -1,0 +1,29 @@
+node_modules/
+dist/
+.env
+.env.local
+.env.*.local
+*.log
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Smoke tests don't need to be in the image
+smoke-test.mjs
+smoke-test-locales.mjs
+
+# Docs except README
+*.md
+!README.md
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Docker itself
+Dockerfile
+.dockerignore
+render.yaml
