@@ -137,6 +137,40 @@ specific UI flow.
 
 ---
 
+## Deploy to Render (one click)
+
+The repo ships with `render.yaml` (Render Blueprint) and a `Dockerfile`.
+A single click on Render's dashboard creates the service:
+
+1. Open **https://dashboard.render.com/blueprints** in your browser.
+2. Click **New Blueprint Instance**.
+3. Connect the GitHub repo `monzer-9772/carebridge-mcp`.
+4. Render reads `render.yaml` and shows the plan (free tier, frankfurt,
+   Docker runtime, MCP_TRANSPORT=http on port 3100).
+5. Click **Apply**. Render builds the Dockerfile and deploys.
+6. The service URL is `https://carebridge-mcp.onrender.com`.
+   - MCP HTTP endpoint: `POST https://carebridge-mcp.onrender.com/mcp`
+   - Health check: `GET  https://carebridge-mcp.onrender.com/health`
+
+The Blueprint sets `CAREBRIDGE_BASE_URL=https://carebridge-tfui.onrender.com`
+by default. To point the MCP at a different CareBridge instance, change
+the env var in the Render service settings.
+
+### Manual alternative (if you don't want to use Blueprint)
+
+1. Render dashboard → **New +** → **Web Service**.
+2. Connect the same GitHub repo.
+3. Runtime: **Docker**. Region: **Frankfurt**. Plan: **Free**.
+4. Health check path: `/health`.
+5. Click **Create Web Service**. Render builds the Dockerfile and
+   starts the container on port 3100.
+
+The container binds to `0.0.0.0:3100` and serves:
+- `GET  /health` → `200 {status: ok, …}`
+- `POST /mcp`   → MCP streamable-HTTP transport (stateless)
+
+---
+
 ## Security model
 
 | Concern | This server |
